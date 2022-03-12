@@ -53,7 +53,7 @@ UPDATE cats
 SET breed = 'British Shorthair'
 WHERE name = 'Ringo';
 
-#Update both Maine Coons' ages to be 12
+#Update both Maine Coons ages to be 12
 UPDATE cats
 SET age = 12
 WHERE breed = 'Maine Coon';
