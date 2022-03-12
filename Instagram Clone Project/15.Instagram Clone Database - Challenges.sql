@@ -9,13 +9,28 @@ ORDER BY
 LIMIT
   10;
 
+/*We want to know our users who have been around the shortest.  
+Find the 5 youngest users.*/
+SELECT
+  *
+FROM
+  users
+ORDER BY
+  created_at desc
+LIMIT
+  5;
 
 /*What day of the week do most users register on?
-We need to figure out when to schedule an ad campgain*/
-SELECT date_format(created_at,'%W') AS 'day of the week', COUNT(*) AS 'total registration'
-FROM users
-GROUP BY 1
-ORDER BY 2 DESC;
+We need to figure out when to schedule an ad campaign*/
+SELECT
+  date_format(created_at, '%W') AS 'day of the week',
+  COUNT(*) AS 'total registration'
+FROM
+  users
+GROUP BY
+  1
+ORDER BY
+  2 DESC;
 
 /*What time of the day do most users register on?
 We need to figure out when to schedule an ad campaign*/
@@ -26,38 +41,75 @@ ORDER BY 2 DESC
 LIMIT 5;
 
 /*version 2*/
-SELECT 
-    DAYNAME(created_at) AS day,
-    COUNT(*) AS total
-FROM users
-GROUP BY day
-ORDER BY total DESC
-LIMIT 2;
+SELECT
+  DAYNAME(created_at) AS day,
+  COUNT(*) AS total
+FROM
+  users
+GROUP BY
+  day
+ORDER BY
+  total DESC
+LIMIT
+  2;
 
+/*What time of the day do most users register on?
+We need to figure out when to schedule an ad campaign*/
+SELECT
+  date_format(created_at, '%H') AS 'time of the day',
+  COUNT(*) AS 'total registration'
+FROM
+  users
+GROUP BY
+  1
+ORDER BY
+  2 DESC;
 
 /*We want to target our inactive users with an email campaign.
 Find the users who have never posted a photo*/
-SELECT username
-FROM users
-LEFT JOIN photos ON users.id = photos.user_id
-WHERE photos.id IS NULL;
+SELECT
+  username
+FROM
+  users
+  LEFT JOIN photos ON users.id = photos.user_id
+WHERE
+  photos.id IS NULL;
 
 /*We want to target our inactive users with an email campaign.
+<<<<<<< HEAD
 Find the users who have never posted a comment*/
 SELECT users.id, username
 FROM users
 LEFT JOIN comments ON users.id = comments.user_id
 WHERE comments.id IS NULL;
+=======
+Find the users who have never posted a comments*/
+SELECT
+  username
+FROM
+  users
+  LEFT JOIN comments ON users.id = comments.user_id
+WHERE
+  comments.id IS NULL;
+>>>>>>> 51824ffcedeb17adbe15ef492094578da1466bc2
 
 /*We're running a new contest to see who can get the most likes on a single photo.
 WHO WON??!!*/
-SELECT users.username,photos.id,photos.image_url,COUNT(*) AS Total_Likes
-FROM likes
-JOIN photos ON photos.id = likes.photo_id
-JOIN users ON users.id = likes.user_id
-GROUP BY photos.id
-ORDER BY Total_Likes DESC
-LIMIT 1;
+SELECT
+  users.username,
+  photos.id,
+  photos.image_url,
+  COUNT(*) AS Total_Likes
+FROM
+  likes
+  JOIN photos ON photos.id = likes.photo_id
+  JOIN users ON users.id = likes.user_id
+GROUP BY
+  photos.id
+ORDER BY
+  Total_Likes DESC
+LIMIT
+  1;
 
 /*version 2*/
 SELECT 
