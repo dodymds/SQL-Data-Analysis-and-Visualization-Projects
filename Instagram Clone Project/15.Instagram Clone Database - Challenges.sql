@@ -1,8 +1,13 @@
 /*We want to reward our users who have been around the longest.  
-Find the 5 oldest users.*/
-SELECT * FROM users
-ORDER BY created_at
-LIMIT 5;
+Find the 10 oldest users.*/
+SELECT
+  *
+FROM
+  users
+ORDER BY
+  created_at
+LIMIT
+  10;
 
 
 /*What day of the week do most users register on?
@@ -11,6 +16,14 @@ SELECT date_format(created_at,'%W') AS 'day of the week', COUNT(*) AS 'total reg
 FROM users
 GROUP BY 1
 ORDER BY 2 DESC;
+
+/*What time of the day do most users register on?
+We need to figure out when to schedule an ad campaign*/
+SELECT date_format(created_at,'%H') AS 'time of the day', COUNT(*) AS 'total registration'
+FROM users
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 5;
 
 /*version 2*/
 SELECT 
@@ -29,6 +42,12 @@ FROM users
 LEFT JOIN photos ON users.id = photos.user_id
 WHERE photos.id IS NULL;
 
+/*We want to target our inactive users with an email campaign.
+Find the users who have never posted a comment*/
+SELECT users.id, username
+FROM users
+LEFT JOIN comments ON users.id = comments.user_id
+WHERE comments.id IS NULL;
 
 /*We're running a new contest to see who can get the most likes on a single photo.
 WHO WON??!!*/
@@ -143,6 +162,42 @@ FROM
 				GROUP BY users.id
 				HAVING total_likes_by_user = (SELECT COUNT(*) FROM photos)) AS total_number_users_likes_every_photos
 	)AS tableB;
+
+/*Mega Challenges
+Are we overrun with bots and celebrity accounts?
+Find the percentage of our users who have either never commented on a photo or have commented on every photo*/
+
+SELECT
+  COUNT(*) AS total_account_anomaly,
+  COUNT(*) AS percentage_of_account_anomaly
+FROM
+  (
+    SELECT
+      users.id,
+      username
+    FROM
+      users
+      LEFT JOIN comments ON users.id = comments.user_id
+    WHERE
+      comments.id IS NULL
+    UNION
+    SELECT
+      users.id,
+      username
+    FROM
+      users
+      JOIN (
+        SELECT
+          user_id,
+          COUNT(*) AS total_comments
+        FROM
+          comments
+        GROUP BY
+          user_id
+        HAVING
+          COUNT(*) = 257
+      ) com ON users.id = com.user_id
+  ) tabel;
 
 
 /*Find users who have ever commented on a photo*/
